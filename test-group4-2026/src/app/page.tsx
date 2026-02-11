@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import 'leaflet/dist/leaflet.css'
+
 
 const UKMap = dynamic(() => import("./components/UKMap"), {
   ssr: false, // This is the key - disable server-side rendering
