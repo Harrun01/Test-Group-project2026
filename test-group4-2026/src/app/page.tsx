@@ -1,15 +1,18 @@
-import Link from "next/link";
+'use client'
 
-export default function Home() {
+import dynamic from 'next/dynamic'
+import 'leaflet/dist/leaflet.css'
+
+const UKMap = dynamic(() => import("./components/UKMap"), {
+  ssr: false, // This is the key - disable server-side rendering
+  loading: () => <p>Loading map...</p> // Optional: shows while loading
+})
+
+export default function MapPage() {
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is the main page of our Next.js application.</p>
-      <div className="login-button">
-        <Link href="/login">
-          <button>Login</button>
-        </Link>
-      </div>
+      <h1>UK Map</h1>
+      <UKMap />
     </div>
-  );
+  )
 }
