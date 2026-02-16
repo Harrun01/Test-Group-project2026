@@ -6,31 +6,29 @@ import { PathOptions } from 'leaflet'
 
 interface GeoJSONLayerProps {
   url: string
-  onFeatureClick?: (feature: any) => void
-  style?: PathOptions  // Add this
+  onFeatureClick?: (feature: any, regionName?: string) => void
+  onFeatureHover?: (regionName: string | null) => void
+  style?: PathOptions  
+   regionName?: string  
 }
 
-export default function GeoJSONLayer({ url, onFeatureClick, style }: GeoJSONLayerProps) {
+export default function GeoJSONLayer({ url, onFeatureClick, style, regionName , onFeatureHover}: GeoJSONLayerProps) {
   const [data, setData] = useState(null)
   
   useEffect(() => {
-    console.log('Loading GeoJSON from:', url)
     fetch(url)
       .then(res => res.json())
       .then(jsonData => {
         console.log('GeoJSON loaded successfully:', url)
         setData(jsonData)
       })
-      .catch(err => console.error('Error loading GeoJSON:', err))
   }, [url])
+  
   
   if (!data) {
     console.log('No data yet for:', url)
     return null
   }
-  
-  console.log('Rendering GeoJSON for:', url)
-  
   // Default style if none provided
   const defaultStyle = {
     fillColor: '#e0e0e0',
@@ -39,14 +37,19 @@ export default function GeoJSONLayer({ url, onFeatureClick, style }: GeoJSONLaye
     color: '#666',
     fillOpacity: 0.3
   }
-  
-  return (
+   return (
     <GeoJSON 
       data={data}
-      style={style || defaultStyle}  // Use custom style or default
+      style={style || defaultStyle}
       eventHandlers={{
         click: (e) => {
-          onFeatureClick?.(e.propagatedFrom.feature)
+          onFeatureClick?.(e.propagatedFrom.feature, regionName)
+        },
+        mouseover: () => { 
+          onFeatureHover?.(regionName || null)
+        },
+        mouseout: () => { 
+          onFeatureHover?.(null)
         }
       }}
     />
