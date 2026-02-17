@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 
 
-const UKMap = dynamic(() => import("./components/UKMap"), {
+const UKMap = dynamic(() => import("./Components/UKMap"), {
   ssr: false, // This is the key - disable server-side rendering
   loading: () => <p>Loading map...</p> // Optional: shows while loading
 })
